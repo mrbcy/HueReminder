@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+
+  "name": "Hue Reminder",
+  "description": "This extension can give you a prompt when your sql task finished",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "logo.png",
+	"default_title": "HUE上的任务执行完会给你一个小提示哦",
+	"default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+	"tabs",
+    "http://10.8.8.21:8888/"
+  ],
+  "devtools_page": "devtools.html",
+  "background": { "scripts": ["background.js"] }
+}
