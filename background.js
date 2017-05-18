@@ -1,5 +1,7 @@
 var warningId = 'notification.warning';
-
+var runFlag = 0;
+var beatFlag = 0;
+var firstRun = true;
 
 function showCompleteNotification() {
     chrome.notifications.create(warningId, {
@@ -22,53 +24,55 @@ function showErrorNotification() {
 }
 
 function setUpAlarm(){
-	chrome.alarms.create("myAlarm", {delayInMinutes: 0.05, periodInMinutes: 0.2} );
-	
-	chrome.alarms.onAlarm.addListener(function(alarm) {
-		if(beatFlag == 1){
-			// cancel alarm, show complete notification
-			chrome.alarms.clearAll(function callback(){runFlag = 0;beatFlag = 0;});
-			showCompleteNotification();
-			beatFlag = 0;
-			return;
-		}
-		beatFlag = 1;
-	});
+	chrome.alarms.create("myAlarm", {delayInMinutes: 0.12} );
 }
 
 
-var runFlag = 0;
-var beatFlag = 0;
+
 
 chrome.extension.onRequest.addListener(function(request) {
-  //if (request.command !== 'sendProgressMsg')
-    //return;
+	if (request.command !== 'sendProgressMsg')
+		return;
   
-	
+	if(firstRun){
+		chrome.alarms.onAlarm.addListener(function(alarm) {
+			if(beatFlag == 0){
+				runFlag = 0;
+				showCompleteNotification();
+				return;
+			}
+			
+		});
+		firstRun = true;
+	}
 	if(request.type == 'fail'){
 		// cancel alarm, show complete notification
-		chrome.alarms.clearAll(function callback(){runFlag = 0;beatFlag = 0;});
-		
-		showErrorNotification();
 		beatFlag = 0;
+		runFlag = 0;
+		showErrorNotification();
+		
 		return;
 	}
 	
 	if(request.type == 'finish'){
 		if(runFlag == 0){
 			showCompleteNotification();
+		}else{
+			beatFlag = 0;
+			setUpAlarm();
 		}
 		return;
 	}
 	
 	if(request.type == 'running'){
+		beatFlag += 1;
 		if(runFlag == 0){
-			setUpAlarm();
 			runFlag = 1;
 		}
-		beatFlag = 0;
+		
 	}
 });
+
 
 
 

@@ -18,5 +18,8 @@
     "http://10.8.8.21:8888/"
   ],
   "devtools_page": "devtools.html",
-  "background": { "scripts": ["background.js"] }
+  "background": { 
+	"scripts": ["background.js"],
+	"persistent": true
+  }
 }
