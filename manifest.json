@@ -7,12 +7,13 @@
 
   "browser_action": {
     "default_icon": "logo.png",
-	"default_title": "HUE上的任务执行完会给你一个小提示哦",
+	"default_title": "使用时先按F12打开开发者工具",
 	"default_popup": "popup.html"
   },
   "permissions": [
     "activeTab",
 	"tabs",
+	"notifications",
     "http://10.8.8.21:8888/"
   ],
   "devtools_page": "devtools.html",

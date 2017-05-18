@@ -1,3 +1,10 @@
+function sendCompleteMsg() {
+  chrome.extension.sendRequest({
+      command: "sendCompleteMsg"
+  });
+};
+
+
 chrome.devtools.network.onRequestFinished.addListener(
   function(request) {
 	if(request.request.url == "http://10.8.8.21:8888/notebook/api/check_status"){
@@ -8,8 +15,7 @@ chrome.devtools.network.onRequestFinished.addListener(
 			   || resString.indexOf(
 					'{"status": 0, "query_status": {"status": "available"}}'
 					) >= 0){
-				alert('Task running complete');
-				// prompt('Task running complete',1);
+				sendCompleteMsg();
 				return;
 			}
 
