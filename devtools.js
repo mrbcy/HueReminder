@@ -1,6 +1,7 @@
-function sendCompleteMsg() {
+function sendProgressMsg(msgType) {
   chrome.extension.sendRequest({
-      command: "sendCompleteMsg"
+      command: "sendProgressMsg",
+	  type: msgType
   });
 };
 
@@ -11,12 +12,14 @@ chrome.devtools.network.onRequestFinished.addListener(
 		// console.log(request);
 		request.getContent(function(resString){
 			console.log(resString);
-			if(resString.indexOf('"status": 1') >= 0
-			   || resString.indexOf(
-					'{"status": 0, "query_status": {"status": "available"}}'
-					) >= 0){
-				sendCompleteMsg();
-				return;
+			if(resString.indexOf('"status": 1') >= 0){
+				sendProgressMsg('fail');
+			}
+			if(resString.indexOf('{"status": "available"}') >= 0){
+				sendProgressMsg('finish');
+			}
+			if(resString.indexOf('{"status": "running"}') >= 0){
+				sendProgressMsg('running');
 			}
 
 		});
